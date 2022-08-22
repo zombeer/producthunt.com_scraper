@@ -1,0 +1,118 @@
+query HomePage($cursor: String, $kind: HomefeedKindEnum!) {
+	homefeed(after: $cursor, kind: $kind) {
+		kind
+		edges {
+			node {
+				items {
+					... on Post {
+						id
+						...PostItemFragment
+						featuredComment {
+							id
+							body: bodyText
+							user {
+								id
+							}
+						}
+					}
+					... on DiscussionThread {
+						id
+						...DiscussionHomepageItemFragment
+					}
+					... on AnthologiesStory {
+						id
+						...StoryHomepageItemFragment
+					}
+					... on AdChannel {
+						id
+					}
+				}
+			}
+		}
+		pageInfo {
+			hasNextPage
+			endCursor
+		}
+	}
+	phHomepageOgImageUrl
+}
+fragment PostItemFragment on Post {
+	id
+	commentsCount
+	name
+	description
+	links{
+		storeName
+		websiteName
+	}
+# 	shortenedUrl
+	slug
+	tagline
+	updatedAt
+	pricingType
+	topics(first: 1) {
+		edges {
+			node {
+				name
+				slug
+			}
+		}
+	}
+}
+fragment DiscussionHomepageItemFragment on DiscussionThread {
+	id
+	title
+	descriptionText
+	slug
+	commentsCount
+	user {
+		id
+		firstName
+		username
+		avatarUrl
+		name
+		headline
+		isMaker
+		isViewer
+		badgesCount
+		badgesUniqueCount
+		karmaBadge {
+			kind
+			score
+		}
+	}
+	discussionCategory: category {
+		id
+		name
+		slug
+	}
+}
+fragment StoryHomepageItemFragment on AnthologiesStory {
+	id
+	slug
+	title
+	description
+	minsToRead
+	commentsCount
+	storyCategory: category {
+		name
+		slug
+	}
+	author {
+		id
+		username
+		firstName
+		avatarUrl
+		name
+		headline
+		isMaker
+		isViewer
+		badgesCount
+		badgesUniqueCount
+		karmaBadge {
+			kind
+			score
+		}
+	}
+}
+
